@@ -1,0 +1,30 @@
+name: "postgres-dbml-svg-generator"
+description: "Generates DBML file and SVG diagram of a PostgreSQL migrated DB Schema."
+author: "shaktipn"
+inputs:
+  DB_HOST:
+    description: "The hostname of the PostgreSQL DB"
+    required: true
+  DB_PORT:
+    description: "The port number of the PostgreSQL DB"
+    required: false
+    default: "5432"
+  DB_NAME:
+    description: "The name of the PostgreSQL database"
+    required: true
+  DB_SCHEMA_NAME:
+    description: "The name of the PostgreSQL schema"
+    required: false
+    default: "public"
+  DB_USERNAME:
+    description: "The username for accessing the PostgreSQL DB"
+    required: true
+  DB_PASSWORD:
+    description: "The password for the given PostgreSQL User"
+    required: true
+  DBML_OUTPUT_LOCATION:
+    description: "Full Path for the generated DBML file"
+    required: true
+runs:
+  using: "node20"
+  main: "dist/index.js"
