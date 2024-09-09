@@ -12,7 +12,7 @@ const execPromise = promisify(exec);
 export async function generateSvg(dbmlPath: string, svgPath: string): Promise<void> {
     try {
         logger.info('Installing dbml-renderer...');
-        await execPromise('npm install -g @softwaretechnik-berlin/dbml-renderer');
+        await execPromise('npm install -g @softwaretechnik/dbml-renderer');
 
         logger.info('Generating SVG file from DBML data...');
         await execPromise(`dbml-renderer ${dbmlPath} -o ${svgPath}`);

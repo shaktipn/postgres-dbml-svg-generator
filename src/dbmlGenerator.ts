@@ -68,15 +68,12 @@ async function getColumns(client: Client, schema: string, table: string): Promis
 
 async function getPrimaryKeys(client: Client, schema: string, table: string): Promise<string[]> {
     const query = `
-    SELECT cols.column_name
-    FROM information_schema.table_constraints tconst
-    JOIN information_schema.constraint_column_usage AS ccu 
-    USING (constraint_schema, constraint_name)
-    JOIN information_schema.columns AS cols 
-    ON cols.table_schema = tconst.constraint_schema
-      AND tconst.table_name = cols.table_name 
-      AND ccu.column_name = cols.column_name
-    WHERE tconst.constraint_type = 'PRIMARY KEY' AND tconst.table_schema = $1 AND tconst.table_name = $2;
+    SELECT c.column_name
+    FROM information_schema.table_constraints tc
+    JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_name)
+    JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema
+      AND tc.table_name = c.table_name AND ccu.column_name = c.column_name
+    WHERE tc.constraint_type = 'PRIMARY KEY' AND tc.table_schema = $1 AND tc.table_name = $2;
   `;
     const result = await client.query(query, [schema, table]);
     return result.rows.map((row) => row.column_name);
@@ -85,18 +82,18 @@ async function getPrimaryKeys(client: Client, schema: string, table: string): Pr
 async function getForeignKeys(client: Client, schema: string): Promise<ForeignKeyInfo[]> {
     const query = `
     SELECT
-      tconst.table_name,
+      tc.table_name,
       kcu.column_name,
       ccu.table_name AS foreign_table_name,
       ccu.column_name AS foreign_column_name
-    FROM information_schema.table_constraints AS tconst
+    FROM information_schema.table_constraints AS tc
     JOIN information_schema.key_column_usage AS kcu
-      ON tconst.constraint_name = kcu.constraint_name
-      AND tconst.table_schema = kcu.table_schema
+      ON tc.constraint_name = kcu.constraint_name
+      AND tc.table_schema = kcu.table_schema
     JOIN information_schema.constraint_column_usage AS ccu
-      ON ccu.constraint_name = tconst.constraint_name
-      AND ccu.table_schema = tconst.table_schema
-    WHERE tconst.constraint_type = 'FOREIGN KEY' AND tconst.table_schema = $1;
+      ON ccu.constraint_name = tc.constraint_name
+      AND ccu.table_schema = tc.table_schema
+    WHERE tc.constraint_type = 'FOREIGN KEY' AND tc.table_schema = $1;
   `;
     const result = await client.query(query, [schema]);
     return result.rows;

@@ -23,7 +23,7 @@ function generateSvg(dbmlPath, svgPath) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             logger_1.logger.info('Installing dbml-renderer...');
-            yield execPromise('npm install -g @softwaretechnik-berlin/dbml-renderer');
+            yield execPromise('npm install -g @softwaretechnik/dbml-renderer');
             logger_1.logger.info('Generating SVG file from DBML data...');
             yield execPromise(`dbml-renderer ${dbmlPath} -o ${svgPath}`);
             logger_1.logger.info('SVG file generation completed...!');
