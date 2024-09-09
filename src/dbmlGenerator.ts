@@ -28,6 +28,9 @@ export async function generateDbml(config: DBConfiguration, outputLocation: stri
 
         await writeFile(outputLocation, dbml);
         logger.info('DBML content has been written to file.');
+    } catch (error) {
+        logger.error(`Error during DBML file generation: ${error}`);
+        throw new Error('Failed to generate DBML file.');
     } finally {
         await client.end();
         logger.info('Database connection is now closed.');
