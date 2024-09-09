@@ -22,18 +22,19 @@ export async function generateDbml(config: DBConfiguration, outputLocation: stri
         logger.info('Connected to database.');
 
         const tables = await getTables(client, config.schema);
-        let dbml = "Project {\n  database_type: 'PostgreSQL'\n}\n\n";
+        let dbmlContent = "Project {\n  database_type: 'PostgreSQL'\n}\n\n";
 
         for (const table of tables) {
             const columns = await getColumns(client, config.schema, table);
             const primaryKeys = await getPrimaryKeys(client, config.schema, table);
-            dbml += generateTableDbml(table, columns, primaryKeys);
+            dbmlContent += generateTableDbml(table, columns, primaryKeys);
         }
 
         const foreignKeys = await getForeignKeys(client, config.schema);
-        dbml += generateForeignKeyDbml(foreignKeys);
+        dbmlContent += generateForeignKeyDbml(foreignKeys);
 
-        await writeFile(outputLocation, dbml);
+        await writeFile(outputLocation, dbmlContent);
+        logger.info(dbmlContent);
         logger.info('DBML content has been written to file.');
     } catch (error) {
         logger.error(`Error during DBML file generation: ${error}`);

@@ -39,15 +39,16 @@ function generateDbml(config, outputLocation) {
             yield client.connect();
             logger_1.logger.info('Connected to database.');
             const tables = yield getTables(client, config.schema);
-            let dbml = "Project {\n  database_type: 'PostgreSQL'\n}\n\n";
+            let dbmlContent = "Project {\n  database_type: 'PostgreSQL'\n}\n\n";
             for (const table of tables) {
                 const columns = yield getColumns(client, config.schema, table);
                 const primaryKeys = yield getPrimaryKeys(client, config.schema, table);
-                dbml += generateTableDbml(table, columns, primaryKeys);
+                dbmlContent += generateTableDbml(table, columns, primaryKeys);
             }
             const foreignKeys = yield getForeignKeys(client, config.schema);
-            dbml += generateForeignKeyDbml(foreignKeys);
-            yield (0, promises_1.writeFile)(outputLocation, dbml);
+            dbmlContent += generateForeignKeyDbml(foreignKeys);
+            yield (0, promises_1.writeFile)(outputLocation, dbmlContent);
+            logger_1.logger.info(dbmlContent);
             logger_1.logger.info('DBML content has been written to file.');
         }
         catch (error) {
