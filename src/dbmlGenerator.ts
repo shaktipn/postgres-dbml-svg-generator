@@ -9,8 +9,15 @@ import { logger } from './logger';
  * @param outputLocation The full path to where the DMBL is to be generated.
  */
 export async function generateDbml(config: DBConfiguration, outputLocation: string): Promise<void> {
-    const client = new Client(config);
+    const client = new Client({
+        host: config.host,
+        port: config.port,
+        database: config.database,
+        user: config.user,
+        password: config.password
+    });
     try {
+        logger.info('Attempting to connect to database...');
         await client.connect();
         logger.info('Connected to database.');
 

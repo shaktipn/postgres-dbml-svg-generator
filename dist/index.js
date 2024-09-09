@@ -27,8 +27,15 @@ const logger_1 = __nccwpck_require__(8231);
  */
 function generateDbml(config, outputLocation) {
     return __awaiter(this, void 0, void 0, function* () {
-        const client = new pg_1.Client(config);
+        const client = new pg_1.Client({
+            host: config.host,
+            port: config.port,
+            database: config.database,
+            user: config.user,
+            password: config.password
+        });
         try {
+            logger_1.logger.info('Attempting to connect to database...');
             yield client.connect();
             logger_1.logger.info('Connected to database.');
             const tables = yield getTables(client, config.schema);
