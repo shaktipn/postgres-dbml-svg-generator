@@ -36,6 +36,10 @@ function generateDbml(config, outputLocation) {
             yield (0, promises_1.writeFile)(outputLocation, dbml);
             logger_1.logger.info('DBML content has been written to file.');
         }
+        catch (error) {
+            logger_1.logger.error(`Error during DBML file generation: ${error}`);
+            throw new Error('Failed to generate DBML file.');
+        }
         finally {
             yield client.end();
             logger_1.logger.info('Database connection is now closed.');

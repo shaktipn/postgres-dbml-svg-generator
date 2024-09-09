@@ -4,7 +4,9 @@
     "description": "GitHub Action to generate DBML and SVG from PostgreSQL DB schema",
     "main": "dist/index.js",
     "scripts": {
-        "build": "tsc -b",
+        "build": "npm run build-ts && npm run build-ncc",
+        "build-ncc": "ncc build dist/index.js -o dist",
+        "build-ts": "tsc -b",
         "start": "npm run build",
         "lint": "eslint --ext .ts --fix .",
         "lint-check": "eslint . --ext .ts",
@@ -21,6 +23,7 @@
         "@types/pg": "^8.11.0",
         "eslint": "^8.31.0",
         "@typescript-eslint/eslint-plugin": "^5.16.0",
+        "@vercel/ncc": "^0.38.1",
         "eslint-config-prettier": "^8.5.0",
         "eslint-plugin-import": "^2.26.0",
         "eslint-plugin-prettier": "^4.2.1",
