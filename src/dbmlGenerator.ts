@@ -31,7 +31,7 @@ export async function generateDbml(config: DBConfiguration, outputLocation: stri
             //debug
             columns.map((col) => {
                 logger.warn(
-                    `${col.columnName} | ${col.dataType} | ${col.columnDefault} | ${col.columnDefault}`
+                    `${col.columnName} | ${col.dataType} | ${col.isNullable} | ${col.columnDefault}`
                 );
             });
             const primaryKeys = await getPrimaryKeys(client, config.schema, table);

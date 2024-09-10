@@ -42,7 +42,7 @@ function generateDbml(config, outputLocation) {
                 const columns = yield getColumns(client, config.schema, table);
                 //debug
                 columns.map((col) => {
-                    logger_1.logger.warn(`${col.columnName} | ${col.dataType} | ${col.columnDefault} | ${col.columnDefault}`);
+                    logger_1.logger.warn(`${col.columnName} | ${col.dataType} | ${col.isNullable} | ${col.columnDefault}`);
                 });
                 const primaryKeys = yield getPrimaryKeys(client, config.schema, table);
                 logger_1.logger.warn(primaryKeys.toString()); //debug
