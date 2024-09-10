@@ -121,8 +121,8 @@ function getPrimaryKeys(client, schema, table) {
 function getForeignKeys(client, schema) {
     return __awaiter(this, void 0, void 0, function* () {
         const query = `
-    SELECT DISTINCT
-      tc.table_name,
+     SELECT DISTINCT
+      kcu.table_name,
       kcu.column_name,
       ccu.table_name AS foreign_table_name,
       ccu.column_name AS foreign_column_name
@@ -133,8 +133,13 @@ function getForeignKeys(client, schema) {
     JOIN information_schema.constraint_column_usage AS ccu
       ON ccu.constraint_name = tc.constraint_name
       AND ccu.table_schema = tc.table_schema
+    JOIN information_schema.columns AS c
+      ON c.table_schema = tc.table_schema
+      AND c.table_name = kcu.table_name
+      AND c.column_name = kcu.column_name
     WHERE tc.constraint_type = 'FOREIGN KEY'
-    AND tc.table_schema = $1;
+      AND tc.table_schema = $1
+    ORDER BY kcu.table_name, kcu.column_name;
   `;
         const result = yield client.query(query, [schema]);
         return result.rows.map((row) => ({
