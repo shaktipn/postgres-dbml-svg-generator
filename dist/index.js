@@ -57,29 +57,10 @@ function generateDbml(config, outputLocation) {
             }
             const foreignKeys = yield getForeignKeys(client, config.schema);
             dbmlContent += generateForeignKeyDbml(foreignKeys);
-            dbmlContent = `
-Table users {
-    id integer
-    username varchar
-    role varchar
-    created_at timestamp
-}
-
-Table posts {
-    id integer [pk]
-    title varchar
-    body text [note: 'Content of the post']
-    user_id integer
-    created_at timestamp
-}
-
-Ref: posts.user_id > users.id
-        `.trim();
-            //debug
-            logger_1.logger.warn(path_1.default.resolve(outputLocation));
+            dbmlContent = dbmlContent.trim();
             yield (0, promises_1.writeFile)(outputLocation, dbmlContent);
-            logger_1.logger.info(dbmlContent);
-            logger_1.logger.info('DBML content has been written to file.');
+            logger_1.logger.info(dbmlContent); //debug
+            logger_1.logger.info(`DBML content has been written to file: ${path_1.default.resolve(outputLocation)}`);
         }
         catch (error) {
             logger_1.logger.error(`Error during DBML file generation: ${error}`);
@@ -152,7 +133,12 @@ function getForeignKeys(client, schema) {
     WHERE tc.constraint_type = 'FOREIGN KEY' AND tc.table_schema = $1;
   `;
         const result = yield client.query(query, [schema]);
-        return result.rows;
+        return result.rows.map((row) => ({
+            tableName: row.table_name,
+            columnName: row.column_name,
+            foreignTableName: row.foreign_table_name,
+            foreignColumnName: row.foreign_column_name
+        }));
     });
 }
 function generateTableDbml(table, columns, primaryKeys) {

@@ -38,33 +38,12 @@ export async function generateDbml(config: DBConfiguration, outputLocation: stri
             logger.warn(primaryKeys.toString()); //debug
             dbmlContent += generateTableDbml(table, columns, primaryKeys);
         }
-
         const foreignKeys = await getForeignKeys(client, config.schema);
         dbmlContent += generateForeignKeyDbml(foreignKeys);
-
-        dbmlContent = `
-Table users {
-    id integer
-    username varchar
-    role varchar
-    created_at timestamp
-}
-
-Table posts {
-    id integer [pk]
-    title varchar
-    body text [note: 'Content of the post']
-    user_id integer
-    created_at timestamp
-}
-
-Ref: posts.user_id > users.id
-        `.trim();
-        //debug
-        logger.warn(path.resolve(outputLocation));
+        dbmlContent = dbmlContent.trim();
         await writeFile(outputLocation, dbmlContent);
-        logger.info(dbmlContent);
-        logger.info('DBML content has been written to file.');
+        logger.info(dbmlContent); //debug
+        logger.info(`DBML content has been written to file: ${path.resolve(outputLocation)}`);
     } catch (error) {
         logger.error(`Error during DBML file generation: ${error}`);
         throw new Error('Failed to generate DBML file.');
@@ -131,7 +110,12 @@ async function getForeignKeys(client: Client, schema: string): Promise<ForeignKe
     WHERE tc.constraint_type = 'FOREIGN KEY' AND tc.table_schema = $1;
   `;
     const result = await client.query(query, [schema]);
-    return result.rows;
+    return result.rows.map((row) => ({
+        tableName: row.table_name,
+        columnName: row.column_name,
+        foreignTableName: row.foreign_table_name,
+        foreignColumnName: row.foreign_column_name
+    }));
 }
 
 function generateTableDbml(table: string, columns: ColumnInfo[], primaryKeys: string[]): string {
