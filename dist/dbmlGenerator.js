@@ -32,10 +32,13 @@ function generateDbml(config, outputLocation) {
             yield client.connect();
             logger_1.logger.info('Connected to database.');
             const tables = yield getTables(client, config.schema);
+            logger_1.logger.warn(tables.toString()); // debug
             let dbmlContent = "Project {\n  database_type: 'PostgreSQL'\n}\n\n";
             for (const table of tables) {
                 const columns = yield getColumns(client, config.schema, table);
+                logger_1.logger.warn(columns.toString()); //debug
                 const primaryKeys = yield getPrimaryKeys(client, config.schema, table);
+                logger_1.logger.warn(primaryKeys.toString()); //debug
                 dbmlContent += generateTableDbml(table, columns, primaryKeys);
             }
             const foreignKeys = yield getForeignKeys(client, config.schema);

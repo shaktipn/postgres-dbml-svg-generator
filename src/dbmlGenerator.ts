@@ -22,11 +22,14 @@ export async function generateDbml(config: DBConfiguration, outputLocation: stri
         logger.info('Connected to database.');
 
         const tables = await getTables(client, config.schema);
+        logger.warn(tables.toString()); // debug
         let dbmlContent = "Project {\n  database_type: 'PostgreSQL'\n}\n\n";
 
         for (const table of tables) {
             const columns = await getColumns(client, config.schema, table);
+            logger.warn(columns.toString()); //debug
             const primaryKeys = await getPrimaryKeys(client, config.schema, table);
+            logger.warn(primaryKeys.toString()); //debug
             dbmlContent += generateTableDbml(table, columns, primaryKeys);
         }
 

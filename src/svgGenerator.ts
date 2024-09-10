@@ -15,7 +15,7 @@ export async function generateSvg(dbmlPath: string, svgPath: string): Promise<vo
         await execPromise('npm install @softwaretechnik/dbml-renderer');
 
         logger.info('Generating SVG file from DBML data...');
-        await execPromise(`dbml-renderer ${dbmlPath} -o ${svgPath}`);
+        await execPromise(`npx dbml-renderer ${dbmlPath} -o ${svgPath}`);
 
         logger.info('SVG file generation completed...!');
     } catch (error) {

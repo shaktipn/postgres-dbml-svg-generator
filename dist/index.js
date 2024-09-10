@@ -39,10 +39,13 @@ function generateDbml(config, outputLocation) {
             yield client.connect();
             logger_1.logger.info('Connected to database.');
             const tables = yield getTables(client, config.schema);
+            logger_1.logger.warn(tables.toString()); // debug
             let dbmlContent = "Project {\n  database_type: 'PostgreSQL'\n}\n\n";
             for (const table of tables) {
                 const columns = yield getColumns(client, config.schema, table);
+                logger_1.logger.warn(columns.toString()); //debug
                 const primaryKeys = yield getPrimaryKeys(client, config.schema, table);
+                logger_1.logger.warn(primaryKeys.toString()); //debug
                 dbmlContent += generateTableDbml(table, columns, primaryKeys);
             }
             const foreignKeys = yield getForeignKeys(client, config.schema);
@@ -252,7 +255,7 @@ function generateSvg(dbmlPath, svgPath) {
             logger_1.logger.info('Installing dbml-renderer...');
             yield execPromise('npm install @softwaretechnik/dbml-renderer');
             logger_1.logger.info('Generating SVG file from DBML data...');
-            yield execPromise(`dbml-renderer ${dbmlPath} -o ${svgPath}`);
+            yield execPromise(`npx dbml-renderer ${dbmlPath} -o ${svgPath}`);
             logger_1.logger.info('SVG file generation completed...!');
         }
         catch (error) {
