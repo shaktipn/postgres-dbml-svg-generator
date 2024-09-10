@@ -2,6 +2,7 @@ import { Client } from 'pg';
 import { writeFile } from 'fs/promises';
 import { DBConfiguration, ColumnInfo, ForeignKeyInfo } from './types';
 import { logger } from './logger';
+import path from 'path';
 
 /**
  * Generates a DBML file based on the database configuration.
@@ -59,6 +60,7 @@ export async function generateDbml(config: DBConfiguration, outputLocation: stri
 
         Ref: posts.user_id > users.id
         `.trimStart();
+        logger.warn(path.resolve(outputLocation));
         await writeFile(outputLocation, dbmlContent);
         logger.info(dbmlContent);
         logger.info('DBML content has been written to file.');

@@ -15,11 +15,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.generateDbml = generateDbml;
 const pg_1 = __nccwpck_require__(4194);
 const promises_1 = __nccwpck_require__(3292);
 const logger_1 = __nccwpck_require__(8231);
+const path_1 = __importDefault(__nccwpck_require__(1017));
 /**
  * Generates a DBML file based on the database configuration.
  * @param config The database configuration which is to be used to get the details of the relevant schema to generate the DBML.
@@ -71,6 +75,7 @@ function generateDbml(config, outputLocation) {
 
         Ref: posts.user_id > users.id
         `.trimStart();
+            logger_1.logger.warn(path_1.default.resolve(outputLocation));
             yield (0, promises_1.writeFile)(outputLocation, dbmlContent);
             logger_1.logger.info(dbmlContent);
             logger_1.logger.info('DBML content has been written to file.');
