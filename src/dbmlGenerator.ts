@@ -43,22 +43,23 @@ export async function generateDbml(config: DBConfiguration, outputLocation: stri
         dbmlContent += generateForeignKeyDbml(foreignKeys);
 
         dbmlContent = `
-        Table users {
-            id integer
-            username varchar
-            role varchar
-            created_at timestamp
-        }
+Table users {
+    id integer
+    username varchar
+    role varchar
+    created_at timestamp
+}
 
-        Table posts {
-            id integer [primary key]
-            title varchar
-            body text [note: 'Content of the post']
-            user_id integer
-            created_at timestamp
-        }
+Table posts {
+    id integer [pk]
+    title varchar
+    body text [note: 'Content of the post']
+    user_id integer
+    created_at timestamp
+}
 
-        Ref: posts.user_id > users.id
+Ref: posts.user_id > users.id
+
         `.trimStart();
         logger.warn(path.resolve(outputLocation));
         await writeFile(outputLocation, dbmlContent);

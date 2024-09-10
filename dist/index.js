@@ -58,22 +58,23 @@ function generateDbml(config, outputLocation) {
             const foreignKeys = yield getForeignKeys(client, config.schema);
             dbmlContent += generateForeignKeyDbml(foreignKeys);
             dbmlContent = `
-        Table users {
-            id integer
-            username varchar
-            role varchar
-            created_at timestamp
-        }
+Table users {
+    id integer
+    username varchar
+    role varchar
+    created_at timestamp
+}
 
-        Table posts {
-            id integer [primary key]
-            title varchar
-            body text [note: 'Content of the post']
-            user_id integer
-            created_at timestamp
-        }
+Table posts {
+    id integer [pk]
+    title varchar
+    body text [note: 'Content of the post']
+    user_id integer
+    created_at timestamp
+}
 
-        Ref: posts.user_id > users.id
+Ref: posts.user_id > users.id
+
         `.trimStart();
             logger_1.logger.warn(path_1.default.resolve(outputLocation));
             yield (0, promises_1.writeFile)(outputLocation, dbmlContent);
@@ -284,6 +285,7 @@ function generateSvg(dbmlPath, svgPath) {
         try {
             logger_1.logger.info('Installing dbml-renderer...');
             yield execPromise('npm install @softwaretechnik/dbml-renderer');
+            yield execPromise('npx dbml-renderer -v');
             logger_1.logger.info('Generating SVG file from DBML data...');
             //debug
             logger_1.logger.warn(`${path_1.default.resolve(dbmlPath)} || ${path_1.default.resolve(svgPath)}`);
