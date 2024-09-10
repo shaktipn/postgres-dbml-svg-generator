@@ -288,6 +288,7 @@ function generateSvg(dbmlPath, svgPath) {
             //debug
             logger_1.logger.warn(`Using ${path_1.default.resolve(dbmlPath)} to generate ${path_1.default.resolve(svgPath)}.`);
             yield execPromise(`npx dbml-renderer -i ${dbmlPath} -o ${svgPath}`);
+            yield execPromise(`echo "node_modules\npackage.json\npackage-lock.json" > .gitignore`);
             logger_1.logger.info('SVG file generation completed...!');
         }
         catch (error) {

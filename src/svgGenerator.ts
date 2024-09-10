@@ -14,12 +14,11 @@ export async function generateSvg(dbmlPath: string, svgPath: string): Promise<vo
     try {
         logger.info('Installing dbml-renderer...');
         await execPromise('npm install @softwaretechnik/dbml-renderer');
-
         logger.info('Generating SVG file from DBML data...');
         //debug
         logger.warn(`Using ${path.resolve(dbmlPath)} to generate ${path.resolve(svgPath)}.`);
         await execPromise(`npx dbml-renderer -i ${dbmlPath} -o ${svgPath}`);
-
+        await execPromise(`echo "node_modules\npackage.json\npackage-lock.json" > .gitignore`);
         logger.info('SVG file generation completed...!');
     } catch (error) {
         logger.error(`Error during SVG diagram generation: ${error}`);
