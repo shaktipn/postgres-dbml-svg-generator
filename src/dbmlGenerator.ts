@@ -27,7 +27,12 @@ export async function generateDbml(config: DBConfiguration, outputLocation: stri
 
         for (const table of tables) {
             const columns = await getColumns(client, config.schema, table);
-            logger.warn(columns.toString()); //debug
+            //debug
+            columns.map((col) => {
+                logger.warn(
+                    `${col.columnName} | ${col.dataType} | ${col.columnDefault} | ${col.columnDefault}`
+                );
+            });
             const primaryKeys = await getPrimaryKeys(client, config.schema, table);
             logger.warn(primaryKeys.toString()); //debug
             dbmlContent += generateTableDbml(table, columns, primaryKeys);
@@ -36,6 +41,24 @@ export async function generateDbml(config: DBConfiguration, outputLocation: stri
         const foreignKeys = await getForeignKeys(client, config.schema);
         dbmlContent += generateForeignKeyDbml(foreignKeys);
 
+        dbmlContent = `
+        Table users {
+            id integer
+            username varchar
+            role varchar
+            created_at timestamp
+        }
+
+        Table posts {
+            id integer [primary key]
+            title varchar
+            body text [note: 'Content of the post']
+            user_id integer
+            created_at timestamp
+        }
+
+        Ref: posts.user_id > users.id
+        `.trimStart();
         await writeFile(outputLocation, dbmlContent);
         logger.info(dbmlContent);
         logger.info('DBML content has been written to file.');
