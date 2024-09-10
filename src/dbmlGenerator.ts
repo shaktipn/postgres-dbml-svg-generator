@@ -59,8 +59,7 @@ Table posts {
 }
 
 Ref: posts.user_id > users.id
-
-        `.trimStart();
+        `.trim();
         logger.warn(path.resolve(outputLocation));
         await writeFile(outputLocation, dbmlContent);
         logger.info(dbmlContent);

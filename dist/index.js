@@ -74,8 +74,7 @@ Table posts {
 }
 
 Ref: posts.user_id > users.id
-
-        `.trimStart();
+        `.trim();
             logger_1.logger.warn(path_1.default.resolve(outputLocation));
             yield (0, promises_1.writeFile)(outputLocation, dbmlContent);
             logger_1.logger.info(dbmlContent);
@@ -287,7 +286,7 @@ function generateSvg(dbmlPath, svgPath) {
             yield execPromise('npm install @softwaretechnik/dbml-renderer');
             logger_1.logger.info('Generating SVG file from DBML data...');
             //debug
-            logger_1.logger.warn(`${path_1.default.resolve(dbmlPath)} || ${path_1.default.resolve(svgPath)}`);
+            logger_1.logger.warn(`Using ${path_1.default.resolve(dbmlPath)} to generate ${path_1.default.resolve(svgPath)}.`);
             yield execPromise(`npx dbml-renderer -i ${dbmlPath} -o ${svgPath}`);
             logger_1.logger.info('SVG file generation completed...!');
         }

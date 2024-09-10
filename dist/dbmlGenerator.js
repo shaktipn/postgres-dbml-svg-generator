@@ -67,8 +67,7 @@ Table posts {
 }
 
 Ref: posts.user_id > users.id
-
-        `.trimStart();
+        `.trim();
             logger_1.logger.warn(path_1.default.resolve(outputLocation));
             yield (0, promises_1.writeFile)(outputLocation, dbmlContent);
             logger_1.logger.info(dbmlContent);
