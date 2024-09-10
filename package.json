@@ -16,14 +16,16 @@
     },
     "dependencies": {
         "@actions/core": "^1.10.0",
+        "@dbml/connector": "^3.8.0",
+        "@dbml/core": "^3.8.0",
         "pg": "^8.12.0"
     },
     "devDependencies": {
         "@types/node": "^20.12.0",
         "@types/pg": "^8.11.0",
-        "eslint": "^8.31.0",
         "@typescript-eslint/eslint-plugin": "^5.16.0",
         "@vercel/ncc": "^0.38.1",
+        "eslint": "^8.31.0",
         "eslint-config-prettier": "^8.5.0",
         "eslint-plugin-import": "^2.26.0",
         "eslint-plugin-prettier": "^4.2.1",
