@@ -264,11 +264,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.generateSvg = generateSvg;
 const child_process_1 = __nccwpck_require__(2081);
 const util_1 = __nccwpck_require__(3837);
 const logger_1 = __nccwpck_require__(8231);
+const path_1 = __importDefault(__nccwpck_require__(1017));
 const execPromise = (0, util_1.promisify)(child_process_1.exec);
 /**
  * Generates corresponding SVG for a DBML file.
@@ -281,6 +285,8 @@ function generateSvg(dbmlPath, svgPath) {
             logger_1.logger.info('Installing dbml-renderer...');
             yield execPromise('npm install @softwaretechnik/dbml-renderer');
             logger_1.logger.info('Generating SVG file from DBML data...');
+            //debug
+            logger_1.logger.warn(`${path_1.default.resolve(dbmlPath)} || ${path_1.default.resolve(svgPath)}`);
             yield execPromise(`npx dbml-renderer ${dbmlPath} -o ${svgPath}`);
             logger_1.logger.info('SVG file generation completed...!');
         }

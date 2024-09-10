@@ -1,6 +1,7 @@
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import { logger } from './logger';
+import path from 'path';
 
 const execPromise = promisify(exec);
 
@@ -15,6 +16,8 @@ export async function generateSvg(dbmlPath: string, svgPath: string): Promise<vo
         await execPromise('npm install @softwaretechnik/dbml-renderer');
 
         logger.info('Generating SVG file from DBML data...');
+        //debug
+        logger.warn(`${path.resolve(dbmlPath)} || ${path.resolve(svgPath)}`);
         await execPromise(`npx dbml-renderer ${dbmlPath} -o ${svgPath}`);
 
         logger.info('SVG file generation completed...!');
