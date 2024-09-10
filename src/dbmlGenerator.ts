@@ -46,7 +46,7 @@ export async function generateDbml(config: DBConfiguration, outputLocation: stri
         logger.error(`Error during DBML file generation: ${error}`);
         throw new Error('Failed to generate DBML file.');
     } finally {
-        // await client.end();
+        await client.end();
         logger.info('Database connection is now closed.');
     }
 }
@@ -125,11 +125,15 @@ function generateTableDbml(table: string, columns: ColumnInfo[], primaryKeys: st
     let dbml = `Table ${table} {\n`;
     for (const column of columns) {
         let columnDef = `  ${column.columnName} ${column.dataType}`;
+        const constraints = [];
         if (column.isNullable === 'NO') {
-            columnDef += ' [not null]';
+            constraints.push('not null');
         }
         if (column.default) {
-            columnDef += ` [default: ${column.default}]`;
+            constraints.push(`default: ${column.default}`);
+        }
+        if (constraints.length > 0) {
+            columnDef += ` [${constraints.join(', ')}]`;
         }
         dbml += columnDef + '\n';
     }

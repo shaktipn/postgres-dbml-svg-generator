@@ -66,7 +66,7 @@ function generateDbml(config, outputLocation) {
             throw new Error('Failed to generate DBML file.');
         }
         finally {
-            // await client.end();
+            yield client.end();
             logger_1.logger.info('Database connection is now closed.');
         }
     });
@@ -149,11 +149,15 @@ function generateTableDbml(table, columns, primaryKeys) {
     let dbml = `Table ${table} {\n`;
     for (const column of columns) {
         let columnDef = `  ${column.columnName} ${column.dataType}`;
+        const constraints = [];
         if (column.isNullable === 'NO') {
-            columnDef += ' [not null]';
+            constraints.push('not null');
         }
         if (column.default) {
-            columnDef += ` [default: ${column.default}]`;
+            constraints.push(`default: ${column.default}`);
+        }
+        if (constraints.length > 0) {
+            columnDef += ` [${constraints.join(', ')}]`;
         }
         dbml += columnDef + '\n';
     }
