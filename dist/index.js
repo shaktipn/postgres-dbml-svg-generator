@@ -121,7 +121,7 @@ function getPrimaryKeys(client, schema, table) {
 function getForeignKeys(client, schema) {
     return __awaiter(this, void 0, void 0, function* () {
         const query = `
-    SELECT
+    SELECT DISTINCT
       tc.table_name,
       kcu.column_name,
       ccu.table_name AS foreign_table_name,

@@ -97,7 +97,7 @@ async function getPrimaryKeys(client: Client, schema: string, table: string): Pr
 
 async function getForeignKeys(client: Client, schema: string): Promise<ForeignKeyInfo[]> {
     const query = `
-    SELECT
+    SELECT DISTINCT
       tc.table_name,
       kcu.column_name,
       ccu.table_name AS foreign_table_name,
