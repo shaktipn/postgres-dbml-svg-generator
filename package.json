@@ -16,8 +16,6 @@
     },
     "dependencies": {
         "@actions/core": "^1.10.0",
-        "@dbml/connector": "^3.8.0",
-        "@dbml/core": "^3.8.0",
         "pg": "^8.12.0"
     },
     "devDependencies": {
