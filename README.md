@@ -50,25 +50,39 @@ on:
 jobs:
     generate-dbml-svg:
         runs-on: ubuntu-latest
+
+        services:
+            postgres:
+                image: postgres:15
+                env:
+                    POSTGRES_DB: playground
+                    POSTGRES_USER: playground
+                    POSTGRES_PASSWORD: Playground@1234
+                options: >-
+                    --health-cmd pg_isready
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+                ports:
+                    - 54322:5432
+
         steps:
             - uses: actions/checkout@v4
-            - name: Install dependencies
-              run: npm ci
             - name: Flyway migrate
               run: ./gradlew -Dflyway.configFiles=postgresql/flyway/local.conf flywayMigrate -i
             - name: Generate DBML and SVG files
               uses: shaktipn/postgres-dbml-svg-generator@main
               with:
-                  DB_HOST: ${{ DB_HOST }}
-                  DB_PORT: ${{ DB_PORT }}
-                  DB_NAME: ${{ DB_NAME }}
-                  DB_SCHEMA_NAME: ${{ DB_SCHEMA_NAME }}
-                  DB_USERNAME: ${{ DB_USERNAME }}
-                  DB_PASSWORD: ${{ DB_PASSWORD }}
+                  DB_HOST: localhost
+                  DB_PORT: 54322
+                  DB_NAME: playground
+                  DB_SCHEMA_NAME: public
+                  DB_USERNAME: playground
+                  DB_PASSWORD: Playground@1234
                   DBML_OUTPUT_LOCATION: './database_public_schema.dbml'
             - name: Commit Changes
-              uses: EndBug/add-and-commit@v9
+              uses: stefanzweifel/git-auto-commit-action@v5
               with:
-                  message: 'Generate DBML file and SVG diagram for Postgres DB migrations'
-                  token: ${{ secrets.CUSTOM_GH_TOKEN }}
+                  commit_message: Generate DBML file and SVG diagram
+                  file_pattern: ./database_public_schema.dbml ./database_public_schema.svg
 ```
