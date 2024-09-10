@@ -49,7 +49,7 @@ function generateDbml(config, outputLocation) {
                 const columns = yield getColumns(client, config.schema, table);
                 //debug
                 columns.map((col) => {
-                    logger_1.logger.warn(`${col.columnName} | ${col.dataType} | ${col.isNullable} | ${col.columnDefault}`);
+                    logger_1.logger.warn(`${col.columnName} | ${col.dataType} | ${col.isNullable} | ${col.default}`);
                 });
                 const primaryKeys = yield getPrimaryKeys(client, config.schema, table);
                 logger_1.logger.warn(primaryKeys.toString()); //debug
@@ -75,6 +75,7 @@ Table posts {
 
 Ref: posts.user_id > users.id
         `.trim();
+            //debug
             logger_1.logger.warn(path_1.default.resolve(outputLocation));
             yield (0, promises_1.writeFile)(outputLocation, dbmlContent);
             logger_1.logger.info(dbmlContent);
@@ -110,7 +111,13 @@ function getColumns(client, schema, table) {
     ORDER BY ordinal_position;
   `;
         const result = yield client.query(query, [schema, table]);
-        return result.rows;
+        logger_1.logger.info(result.rows.toString());
+        return result.rows.map((row) => ({
+            columnName: row.column_name,
+            dataType: row.data_type,
+            isNullable: row.is_nullable,
+            default: row.column_default
+        }));
     });
 }
 function getPrimaryKeys(client, schema, table) {
@@ -155,8 +162,8 @@ function generateTableDbml(table, columns, primaryKeys) {
         if (column.isNullable === 'NO') {
             columnDef += ' [not null]';
         }
-        if (column.columnDefault) {
-            columnDef += ` [default: ${column.columnDefault}]`;
+        if (column.default) {
+            columnDef += ` [default: ${column.default}]`;
         }
         dbml += columnDef + '\n';
     }

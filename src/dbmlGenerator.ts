@@ -31,7 +31,7 @@ export async function generateDbml(config: DBConfiguration, outputLocation: stri
             //debug
             columns.map((col) => {
                 logger.warn(
-                    `${col.columnName} | ${col.dataType} | ${col.isNullable} | ${col.columnDefault}`
+                    `${col.columnName} | ${col.dataType} | ${col.isNullable} | ${col.default}`
                 );
             });
             const primaryKeys = await getPrimaryKeys(client, config.schema, table);
@@ -60,6 +60,7 @@ Table posts {
 
 Ref: posts.user_id > users.id
         `.trim();
+        //debug
         logger.warn(path.resolve(outputLocation));
         await writeFile(outputLocation, dbmlContent);
         logger.info(dbmlContent);
@@ -91,7 +92,13 @@ async function getColumns(client: Client, schema: string, table: string): Promis
     ORDER BY ordinal_position;
   `;
     const result = await client.query(query, [schema, table]);
-    return result.rows;
+    logger.info(result.rows.toString());
+    return result.rows.map((row) => ({
+        columnName: row.column_name,
+        dataType: row.data_type,
+        isNullable: row.is_nullable,
+        default: row.column_default
+    }));
 }
 
 async function getPrimaryKeys(client: Client, schema: string, table: string): Promise<string[]> {
@@ -134,8 +141,8 @@ function generateTableDbml(table: string, columns: ColumnInfo[], primaryKeys: st
         if (column.isNullable === 'NO') {
             columnDef += ' [not null]';
         }
-        if (column.columnDefault) {
-            columnDef += ` [default: ${column.columnDefault}]`;
+        if (column.default) {
+            columnDef += ` [default: ${column.default}]`;
         }
         dbml += columnDef + '\n';
     }

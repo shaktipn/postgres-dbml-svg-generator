@@ -11,7 +11,7 @@ export interface ColumnInfo {
     columnName: string;
     dataType: string;
     isNullable: string;
-    columnDefault: string | null;
+    default: string | null;
 }
 
 export interface ForeignKeyInfo {
