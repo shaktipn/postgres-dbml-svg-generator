@@ -285,7 +285,6 @@ function generateSvg(dbmlPath, svgPath) {
         try {
             logger_1.logger.info('Installing dbml-renderer...');
             yield execPromise('npm install @softwaretechnik/dbml-renderer');
-            yield execPromise('npx dbml-renderer -v');
             logger_1.logger.info('Generating SVG file from DBML data...');
             //debug
             logger_1.logger.warn(`${path_1.default.resolve(dbmlPath)} || ${path_1.default.resolve(svgPath)}`);
