@@ -31,6 +31,10 @@ inputs:
 runs:
     using: 'composite'
     steps:
+        - name: Checkout GitHubActions
+          uses: actions/checkout@v4
+          with:
+              path: .github/github-actions-private
         - name: 'Generate DBML and SVG'
           working-directory: .github/github-actions-private
           shell: 'bash'
