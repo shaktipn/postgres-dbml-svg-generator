@@ -146,7 +146,7 @@ function generateTableDbml(table: string, columns: ColumnInfo[], primaryKeys: st
             constraints.push('not null');
         }
         if (column.default) {
-            constraints.push(`default: ${column.default}`);
+            constraints.push(`default: \`${column.default}\``);
         }
         if (constraints.length > 0) {
             columnDef += ` [${constraints.join(', ')}]`;
@@ -208,7 +208,7 @@ function mapDataType(
             return 'timestamp';
 
         case 'timestamp with time zone':
-            return 'datetime';
+            return 'timestamptz';
 
         case 'date':
             return 'date';

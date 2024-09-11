@@ -158,7 +158,7 @@ function generateTableDbml(table, columns, primaryKeys) {
             constraints.push('not null');
         }
         if (column.default) {
-            constraints.push(`default: ${column.default}`);
+            constraints.push(`default: \`${column.default}\``);
         }
         if (constraints.length > 0) {
             columnDef += ` [${constraints.join(', ')}]`;
@@ -204,7 +204,7 @@ function mapDataType(postgresType, maxLength, precision, scale) {
         case 'timestamp without time zone':
             return 'timestamp';
         case 'timestamp with time zone':
-            return 'datetime';
+            return 'timestamptz';
         case 'date':
             return 'date';
         case 'time':
