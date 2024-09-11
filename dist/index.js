@@ -247,7 +247,7 @@ function mapDataType(postgresType, maxLength, precision, scale) {
         case 'bigserial':
             return 'serial';
         default:
-            return 'unknown';
+            return `"${postgresType}"`;
     }
 }
 

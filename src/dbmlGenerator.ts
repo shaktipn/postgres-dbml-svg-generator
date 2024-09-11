@@ -256,6 +256,6 @@ function mapDataType(
             return 'serial';
 
         default:
-            return 'unknown';
+            return `"${postgresType}"`;
     }
 }
