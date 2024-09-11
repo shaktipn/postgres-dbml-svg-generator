@@ -32,6 +32,7 @@ runs:
     using: 'composite'
     steps:
         - name: 'Generate DBML and SVG'
+          working-directory: .github/github-actions-private
           shell: 'bash'
           run: npm run start
         - name: 'Commit and push generated files'
