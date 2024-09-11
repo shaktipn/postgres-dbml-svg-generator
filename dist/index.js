@@ -278,7 +278,9 @@ function run() {
             const dbmlOutputLocation = (0, core_1.getInput)('DBML_OUTPUT_LOCATION', {
                 required: true
             });
-            const svgOutputLocation = dbmlOutputLocation.replace('.dbml', '.svg');
+            const svgOutputLocation = (0, core_1.getInput)('SVG_OUTPUT_LOCATION', {
+                required: true
+            });
             yield (0, dbmlGenerator_1.generateDbml)(dbConfig, dbmlOutputLocation);
             logger_1.logger.info(`DBML file generated at: ${dbmlOutputLocation}`);
             yield (0, svgGenerator_1.generateSvg)(dbmlOutputLocation, svgOutputLocation);

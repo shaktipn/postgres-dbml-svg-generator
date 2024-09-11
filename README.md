@@ -17,7 +17,8 @@ Add the following step to the workflow:
       DB_SCHEMA_NAME: <<DB schema name>> # has default for public
       DB_USERNAME: <<Username>>
       DB_PASSWORD: <<password>>
-      DBML_OUTPUT_LOCATION: <<full path to the location where you want to save the dbml and svg file>>
+      DBML_OUTPUT_LOCATION: <<full path to the location where you want to save the dbml file>>
+      SVG_OUTPUT_LOCATION: <<full path to the location where you want to save the svg file>>
 ```
 
 ## Inputs
@@ -28,14 +29,15 @@ Add the following step to the workflow:
 -   `DB_SCHEMA_NAME`: The name of the PostgreSQL schema (default: public)
 -   `DB_USERNAME`: The username for the PostgreSQL user. (required)
 -   `DB_PASSWORD`: The password for the PostgreSQL user. (required)
--   `DBML_OUTPUT_LOCATION`: Location for DBML and SVG generation. (required)
+-   `DBML_OUTPUT_LOCATION`: Location for DBML generation. (required)
+-   `SVG_OUTPUT_LOCATION`: Location for SVG generation. (required)
 
 ## Outputs
 
 No output but following files will be generated:
 
 -   A DBML file as per the specified `DBML_OUTPUT_LOCATION`.
--   A corresponding SVG file at the same location as the DBML file.
+-   A SVG file as per the specified `SVG_OUTPUT_LOCATION`.
 
 # Example Usage:
 

@@ -25,6 +25,17 @@ inputs:
     DBML_OUTPUT_LOCATION:
         description: 'Full Path for the generated DBML file'
         required: true
+    SVG_OUTPUT_LOCATION:
+        description: 'Full Path for the generated SVG file'
+        required: true
 runs:
-    using: 'node20'
-    main: 'dist/index.js'
+    using: 'composite'
+    steps:
+        - name: 'Generate DBML and SVG'
+          shell: 'bash'
+          run: npm run start
+        - name: 'Commit and push generated files'
+          uses: stefanzweifel/git-auto-commit-action@v5
+          with:
+              commit_message: Generate DBML file and SVG diagram
+              file_pattern: ${{ inputs.DBML_OUTPUT_LOCATION }} ${{ inputs.SVG_OUTPUT_LOCATION }}

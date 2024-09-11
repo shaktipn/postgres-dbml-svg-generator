@@ -20,7 +20,9 @@ async function run(): Promise<void> {
         const dbmlOutputLocation = getInput('DBML_OUTPUT_LOCATION', {
             required: true
         });
-        const svgOutputLocation = dbmlOutputLocation.replace('.dbml', '.svg');
+        const svgOutputLocation = getInput('SVG_OUTPUT_LOCATION', {
+            required: true
+        });
 
         await generateDbml(dbConfig, dbmlOutputLocation);
         logger.info(`DBML file generated at: ${dbmlOutputLocation}`);
