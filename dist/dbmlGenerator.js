@@ -84,7 +84,7 @@ function getColumns(client, schema, table) {
     column_default,
     character_maximum_length,
     numeric_precision,
-    numeric_scale,
+    numeric_scale
     FROM information_schema.columns
     WHERE table_schema = $1 AND table_name = $2
     ORDER BY ordinal_position;
