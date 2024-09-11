@@ -72,12 +72,6 @@ jobs:
             - uses: actions/checkout@v4
             - name: Flyway migrate
               run: ./gradlew -Dflyway.configFiles=postgresql/flyway/local.conf flywayMigrate -i
-            - name: Checkout GitHubActions
-              uses: actions/checkout@v4
-              with:
-                  repository: shaktipn/postgres-dbml-svg-generator
-                  path: .github/github-actions-private
-                  ref: main
             - name: Generate DBML and SVG files
               uses: shaktipn/postgres-dbml-svg-generator@main
               with:
@@ -88,6 +82,7 @@ jobs:
                   DB_USERNAME: playground
                   DB_PASSWORD: Playground@1234
                   DBML_OUTPUT_LOCATION: './database_public_schema.dbml'
+                  SVG_OUTPUT_LOCATION: './database_public_schema.svg'
             - name: Commit Changes
               uses: stefanzweifel/git-auto-commit-action@v5
               with:

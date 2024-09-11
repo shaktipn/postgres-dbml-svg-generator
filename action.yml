@@ -29,20 +29,5 @@ inputs:
         description: 'Full Path for the generated SVG file'
         required: true
 runs:
-    using: 'composite'
-    steps:
-        - name: Checkout private repo to github-actions-private
-          uses: actions/checkout@v4
-          with:
-              repository: shaktipn/postgres-dbml-svg-generator
-              path: .github/github-actions-private
-              ref: main
-        - name: 'Generate DBML and SVG'
-          working-directory: .github/github-actions-private
-          shell: 'bash'
-          run: npm run start
-        - name: 'Commit and push generated files'
-          uses: stefanzweifel/git-auto-commit-action@v5
-          with:
-              commit_message: Generate DBML file and SVG diagram
-              file_pattern: ${{ inputs.DBML_OUTPUT_LOCATION }} ${{ inputs.SVG_OUTPUT_LOCATION }}
+    using: 'node20'
+    main: 'dist/index.js'
