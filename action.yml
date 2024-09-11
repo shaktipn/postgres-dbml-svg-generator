@@ -31,10 +31,12 @@ inputs:
 runs:
     using: 'composite'
     steps:
-        - name: Checkout GitHubActions
+        - name: Checkout private repo to github-actions-private
           uses: actions/checkout@v4
           with:
+              repository: shaktipn/postgres-dbml-svg-generator
               path: .github/github-actions-private
+              ref: main
         - name: 'Generate DBML and SVG'
           working-directory: .github/github-actions-private
           shell: 'bash'
