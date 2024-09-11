@@ -85,7 +85,13 @@ function getTables(client, schema) {
 function getColumns(client, schema, table) {
     return __awaiter(this, void 0, void 0, function* () {
         const query = `
-    SELECT column_name, data_type, is_nullable, column_default
+    SELECT column_name, 
+    data_type, 
+    is_nullable, 
+    column_default,
+    character_maximum_length,
+    numeric_precision,
+    numeric_scale,
     FROM information_schema.columns
     WHERE table_schema = $1 AND table_name = $2
     ORDER BY ordinal_position;
@@ -93,7 +99,7 @@ function getColumns(client, schema, table) {
         const result = yield client.query(query, [schema, table]);
         return result.rows.map((row) => ({
             columnName: row.column_name,
-            dataType: mapDataType(row.data_type),
+            dataType: mapDataType(row.data_type, row.character_maximum_length, row.numeric_precision, row.numeric_scale),
             isNullable: row.is_nullable,
             default: row.column_default
         }));
@@ -177,7 +183,7 @@ function generateForeignKeyDbml(foreignKeys) {
         .map((fk) => `Ref: ${fk.tableName}.${fk.columnName} > ${fk.foreignTableName}.${fk.foreignColumnName}\n`)
         .join('');
 }
-function mapDataType(postgresType) {
+function mapDataType(postgresType, maxLength, precision, scale) {
     switch (postgresType.toLowerCase()) {
         case 'smallint':
         case 'integer':
@@ -185,7 +191,11 @@ function mapDataType(postgresType) {
             return 'integer';
         case 'numeric':
         case 'decimal':
-            return 'decimal';
+            return precision && scale
+                ? `decimal(${precision},${scale})`
+                : precision
+                    ? `decimal(${precision})`
+                    : 'decimal';
         case 'real':
         case 'float4':
         case 'double precision':
@@ -194,7 +204,7 @@ function mapDataType(postgresType) {
         case 'character':
         case 'character varying':
         case 'varchar':
-            return 'varchar';
+            return maxLength ? `varchar(${maxLength})` : 'varchar';
         case 'text':
             return 'text';
         case 'timestamp':
